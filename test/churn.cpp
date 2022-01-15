@@ -1,7 +1,6 @@
 //
-// Created by egl on 14.01.2022.
+// Created by egl on 13.01.2022.
 //
-
 
 #include "churn.h"
 #include <data_stream.h>
@@ -15,14 +14,14 @@ void churn(){
 
 
     std::vector<order> v_bids;
-    prepareOrderVector(1000000,1,3.02, 3.29,12.01, 1242.02,v_bids);
+    prepareOrderVector(1000000,0,3.02, 3.29,12.01, 1242.02,v_bids);
 
     TOrders bids;
     prepareOrderSet(v_bids,bids);
 
     std::vector<order> v_various_orders;
     prepareOrderVector(500000,1,DBL_MIN,11.45, 1242.02,v_various_orders);
-    prepareOrderVector(500000, 1,3.02, 3.29,12.01, 1242.02,v_various_orders);
+    prepareOrderVector(500000, 0,3.02, 3.29,12.01, 1242.02,v_various_orders);
 
 
     TOrders various_orders;
@@ -36,7 +35,7 @@ void churn(){
     long epoch_milli_various_order_start = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()).count();
     for(auto order : various_orders){
-        //matchOrder(order, bids, asks, matches);
+
     }
     long epoch_milli_various_order_end = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()).count();

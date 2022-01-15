@@ -57,27 +57,33 @@ auto func = [](const std::string& thread_id){
         cout << i << endl;
 
 
-        std::vector<order> v_asks;
-        prepareOrderVector(10000,1,3.33, 3.48,11.45, 1242.02,v_asks);
-        nlohmann::json jmsg(v_asks);
+        std::vector<order> v_various_orders;
+        prepareOrderVector(10,1,3.33, 3.48,11.45, 1242.02,v_various_orders);
+        prepareOrderVector(10,0,3.02, 3.29,12.01, 1242.02,v_various_orders);
+        prepareOrderVector(5,1,DBL_MIN,11.45, 1242.02,v_various_orders);
+        prepareOrderVector(5, 0,3.02, 3.29,12.01, 1242.02,v_various_orders);
+
+
+
+        nlohmann::json jmsg(v_various_orders);
         zmq::message_t z_out(jmsg.dump());
         sock.send(z_out, zmq::send_flags::none);
 
         zmq::message_t z_in;
         sock.recv(z_in);
-/*        std::cout
-                << " thread " << thread_id
-                << "\nsending: " << jmsg.dump()
-                << " received: " << z_in.to_string_view();*/
+        std::cout
+//                << " thread " << thread_id
+//                << "\nsending: " << jmsg.dump()
+                << " received: " << z_in.to_string_view();
 
 
 
         auto jmsg_in = nlohmann::json::parse(z_in.to_string_view());
         for(auto m: jmsg_in){
-            match mtch(m["requestingOrderId"],m["respondingOrderId"],m["respondingOrderId"]);
+            match mtch(m["requestingOrderId"],m["respondingOrderId"],m["matchAmount"]);
 
         }
-        i+= 10000;
+        i+= 30;
     }
 #pragma clang diagnostic pop
 
