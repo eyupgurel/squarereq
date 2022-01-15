@@ -70,36 +70,14 @@ auto func = [](const std::string& thread_id){
                 << "\nsending: " << jmsg.dump()
                 << " received: " << z_in.to_string_view();*/
 
+
+
+        auto jmsg_in = nlohmann::json::parse(z_in.to_string_view());
+        for(auto m: jmsg_in){
+            match mtch(m["requestingOrderId"],m["respondingOrderId"],m["respondingOrderId"]);
+
+        }
         i+= 10000;
-
-
-/*        int i = 0;
-        for(order o: v_asks){
-            //order o = v_asks[0];
-            i++;
-            cout << i << endl;
-            nlohmann::json jmsg;
-            jmsg["price"] = o.price;
-            jmsg["epochMilli"] = o.epochMilli;
-            jmsg["quantity"] = o.quantity;
-            jmsg["id"] = o.id;
-            jmsg["ot"] = 0; // o.ot;
-            zmq::message_t z_out(jmsg.dump());
-            sock.send(z_out, zmq::send_flags::none);
-
-            zmq::message_t z_in;
-            sock.recv(z_in);
-*//*            std::cout
-                    << " thread " << thread_id
-                    << "\nsending: " << jmsg.dump()
-                    << " received: " << z_in.to_string_view();*//*
-        }*/
-
-
-
-        //std::this_thread::sleep_for(500ms);
-
-
     }
 #pragma clang diagnostic pop
 
