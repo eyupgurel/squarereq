@@ -3,7 +3,7 @@ project(squarereq)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(squarereq main.cpp test/churn.cpp test/churn.h)
+add_executable(squarereq main.cpp)
 
 #find cppzmq wrapper, installed by make of cppzmq
 find_package(cppzmq)
