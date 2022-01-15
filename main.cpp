@@ -48,22 +48,19 @@ auto func = [](const std::string& thread_id){
     zmq::socket_t sock(ctx, zmq::socket_type::req);
     sock.connect("tcp://127.0.0.1:5555");
 
-    int i = 0;
+
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
     while(true){
-
-        cout << i << endl;
-
-
+        long epoch_milli_various_order_start = std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count();
+        int i = 0;
         std::vector<order> v_various_orders;
-        prepareOrderVector(10,1,3.33, 3.48,11.45, 1242.02,v_various_orders);
-        prepareOrderVector(10,0,3.02, 3.29,12.01, 1242.02,v_various_orders);
-        prepareOrderVector(5,1,DBL_MIN,11.45, 1242.02,v_various_orders);
-        prepareOrderVector(5, 0,3.02, 3.29,12.01, 1242.02,v_various_orders);
-
-
+        prepareOrderVector(250000,1,DBL_MIN,11.45, 1242.02,v_various_orders);
+        prepareOrderVector(250000, 0,3.02, 3.29,12.01, 1242.02,v_various_orders);
+        prepareOrderVector(250000, 0,DBL_MAX, 12.01, 1242.02,v_various_orders);
+        prepareOrderVector(250000,1,3.33, 3.48,11.45, 1242.02,v_various_orders);
 
         nlohmann::json jmsg(v_various_orders);
         zmq::message_t z_out(jmsg.dump());
@@ -71,19 +68,28 @@ auto func = [](const std::string& thread_id){
 
         zmq::message_t z_in;
         sock.recv(z_in);
-        std::cout
+//        std::cout
 //                << " thread " << thread_id
 //                << "\nsending: " << jmsg.dump()
-                << " received: " << z_in.to_string_view();
+//                << " received: " << z_in.to_string_view();
 
 
 
         auto jmsg_in = nlohmann::json::parse(z_in.to_string_view());
         for(auto m: jmsg_in){
             match mtch(m["requestingOrderId"],m["respondingOrderId"],m["matchAmount"]);
-
+            i++;
         }
-        i+= 30;
+
+        long epoch_milli_various_order_end = std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count();
+        auto duration = epoch_milli_various_order_end - epoch_milli_various_order_start;
+
+        cout << "time_elapsed_various_order_processed: " << duration << endl;
+
+        cout << "match size " << i << endl;
+
+        cout << "match per second " << i * 1000 / duration << endl;
     }
 #pragma clang diagnostic pop
 
