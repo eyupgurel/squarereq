@@ -57,7 +57,7 @@ auto func = [](const std::string& thread_id){
                 std::chrono::system_clock::now().time_since_epoch()).count();
         int i = 0;
         std::vector<order> v_various_orders;
-        prepareOrderVector(250000,1,DBL_MIN,11.45, 1242.02,v_various_orders);
+        prepareOrderVector(250000,1,0.0,11.45, 1242.02,v_various_orders);
         prepareOrderVector(250000, 0,3.02, 3.29,12.01, 1242.02,v_various_orders);
         prepareOrderVector(250000, 0,DBL_MAX, 12.01, 1242.02,v_various_orders);
         prepareOrderVector(250000,1,3.33, 3.48,11.45, 1242.02,v_various_orders);
