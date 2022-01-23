@@ -44,10 +44,9 @@ void from_json(const nlohmann::json& j, match& m) {
     m.matchAmount = j.at("matchAmount").get<double>();
 }
 
-auto func = [](const std::string& thread_id){
+auto func = [](const std::string& url,  const std::string& thread_id){
     zmq::socket_t sock(ctx, zmq::socket_type::req);
-    sock.connect("tcp://127.0.0.1:5555");
-
+    sock.connect(url);
 
 
 #pragma clang diagnostic push
@@ -57,10 +56,10 @@ auto func = [](const std::string& thread_id){
                 std::chrono::system_clock::now().time_since_epoch()).count();
         int i = 0;
         std::vector<order> v_various_orders;
-        prepareOrderVector(250000,1,0.0,11.45, 1242.02,v_various_orders);
-        prepareOrderVector(250000, 0,3.02, 3.29,12.01, 1242.02,v_various_orders);
-        prepareOrderVector(250000, 0,DBL_MAX, 12.01, 1242.02,v_various_orders);
-        prepareOrderVector(250000,1,3.33, 3.48,11.45, 1242.02,v_various_orders);
+        prepareOrderVector(250,1,0.0,11.45, 1242.02,v_various_orders);
+        prepareOrderVector(250, 0,3.02, 3.29,12.01, 1242.02,v_various_orders);
+        prepareOrderVector(250, 0,DBL_MAX, 12.01, 1242.02,v_various_orders);
+        prepareOrderVector(250,1,3.33, 3.48,11.45, 1242.02,v_various_orders);
 
         nlohmann::json jmsg(v_various_orders);
         zmq::message_t z_out(jmsg.dump());
@@ -97,8 +96,8 @@ auto func = [](const std::string& thread_id){
 
 };
 
-int main() {
-    std::thread th0 = std::thread(func, "thread_0");
+int main(int argc, char * argv[]) {
+    std::thread th0 = std::thread(func, argv[1], "thread_0");
     //  std::thread th1 = std::thread(func, "thread_1");
     th0.join();
     //th1.join();
