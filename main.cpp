@@ -28,7 +28,7 @@ void from_json(const nlohmann::json& j, order& o) {
     o.price = j.at("price").get<double>();
     o.epochMilli = j.at("epochMilli").get<long>();
     o.quantity = j.at("quantity").get<double>();
-    o.id = j.at("id").get<long>();
+    o.id = j.at("id").get<unsigned long>();
     o.ot = j.at("ot").get<int>();
     o.cud = j.at("cud").get<int>();
 }
@@ -43,8 +43,8 @@ void to_json(nlohmann::json& j, const match& m) {
 }
 
 void from_json(const nlohmann::json& j, match& m) {
-    m.requestingOrderId = j.at("requestingOrderId").get<long>();
-    m.respondingOrderId = j.at("respondingOrderId").get<long>();
+    m.requestingOrderId = j.at("requestingOrderId").get<unsigned long>();
+    m.respondingOrderId = j.at("respondingOrderId").get<unsigned long>();
     m.matchAmount = j.at("matchAmount").get<double>();
 }
 
@@ -88,8 +88,8 @@ auto func = [](const std::string& url,  const std::string& thread_id){
         int i = 0;
         std::vector<order> v_various_orders;
 
-        prepareOrderVector(5000, 0,3.02, 3.29,12.01, 1242.02,v_various_orders);
-        prepareOrderVector(5000,1,3.33, 3.48,11.45, 1242.02,v_various_orders);
+        prepareOrderVector(5000, 0,0, 3.02, 3.29,12.01, 1242.02,v_various_orders);
+        prepareOrderVector(5000,1,0, 3.33, 3.48,11.45, 1242.02,v_various_orders);
 
 
         TOrders bids;
@@ -108,8 +108,8 @@ auto func = [](const std::string& url,  const std::string& thread_id){
 
 
 
-        prepareOrderVector(5000,1,0.0,11.45, 1242.02,v_various_orders);
-        prepareOrderVector(5000, 0,DBL_MAX, 12.01, 1242.02,v_various_orders);
+        prepareOrderVector(5000,1,0,0.0,11.45, 1242.02,v_various_orders);
+        prepareOrderVector(5000, 0,0,DBL_MAX, 12.01, 1242.02,v_various_orders);
 
 
         TOrders active_sell;
